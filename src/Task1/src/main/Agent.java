@@ -2,7 +2,11 @@ package main;
 
 public class Agent{
 
-    public String id;
+    private String id;
+    private String name;
+
+    public Agent(String s, String name) {
+    }
 
     public boolean login() {
         return true;
