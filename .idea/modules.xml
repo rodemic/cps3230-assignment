@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/Task1/Task1.iml" filepath="$PROJECT_DIR$/src/Task1/Task1.iml" />
       <module fileurl="file://$PROJECT_DIR$/cps3230-assignment.iml" filepath="$PROJECT_DIR$/cps3230-assignment.iml" />
     </modules>
   </component>
