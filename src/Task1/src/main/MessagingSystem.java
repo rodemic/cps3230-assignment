@@ -13,17 +13,26 @@ public class MessagingSystem {
     private static List<Mailbox> mbs = new ArrayList<>();
     private static List<SessionToken> sts = new ArrayList<>();
 
-    private static TimeProvider provider;
+    private static TimeProvider provider = new RealTimeProvider();
 
     public static void setTimeProvider(TimeProvider p){
         provider = p;
     }
 
-    public static void populateAgentList(){
+    public static boolean populateAgentList(){
         as.add("agent1");
         as.add("agent2");
         as.add("agent3");
         as.add("agent4");
+        return true;
+    }
+
+    public static boolean addAgent(String agentId){
+        for (String s:as) {
+            if(s.equals(agentId)) return false;
+        }
+        as.add(agentId);
+        return true;
     }
 
     public static boolean registerLoginKey(String loginkey, String agentId){
@@ -42,14 +51,30 @@ public class MessagingSystem {
     }
 
     public static boolean sendMessage(String sessionkey, String sourceAgentId, String targetAgentId, String message){
-        for (Mailbox mb:mbs) {
-            if(mb.getOwnerId().equals(targetAgentId)){
-                Message m = new Message(sourceAgentId,targetAgentId,currentTimeMillis(),message);
-                mb.addMessage(m);
+        if(message.length() > 140) return false;
+        for (SessionToken s : sts) {
+            if (s.getSessionKey().equals(sessionkey)) {
+                if(provider.getCurrTime() - s.getTimestamp() >= 600000) return false;
+                for (String st : as) {
+                    if (st.equals(targetAgentId)) {
+                        for (Mailbox mb : mbs) {
+                            if (mb.getOwnerId().equals(targetAgentId)) {
+                                Message m = new Message(sourceAgentId, targetAgentId, provider.getCurrTime(), message);
+                                mb.addMessage(m);
+                                return true;
+                            }
+                        }
+                        Mailbox nmb = new Mailbox(targetAgentId);
+                        Message m = new Message(sourceAgentId, targetAgentId, provider.getCurrTime(), message);
+                        nmb.addMessage(m);
+                        mbs.add(nmb);
+                        return true;
+                    }
+                }
+                return false;
             }
         }
-
-        return true;
+        return false;
     }
 
 
