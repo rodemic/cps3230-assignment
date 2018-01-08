@@ -20,9 +20,23 @@ public class MessagingSystem {
     }
 
     @Test
-    public void registerLoginKeyCheckCharacters(){
-
+    public void registerLoginKeyCheckCharactersFailMore(){
         assertEquals(false, ms.registerLoginKey("loginkeylongerthan10", "user123"));
+    }
+
+    @Test
+    public void registerLoginKeyCheckCharactersFailLess(){
+        assertEquals(false, ms.registerLoginKey("loginless", "user123"));
+    }
+
+    @Test
+    public void registerLoginKeyCheckCharactersSuccess(){
+        assertEquals(true, ms.registerLoginKey("loginkey10", "user123"));
+    }
+
+    @Test
+    public void loginSuccess(){
+
     }
 
 }
