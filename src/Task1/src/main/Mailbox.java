@@ -23,4 +23,8 @@ public class Mailbox {
         ms.add(m);
         return true;
     }
+
+    public Boolean hasMessages() {
+        return false;
+    }
 }
