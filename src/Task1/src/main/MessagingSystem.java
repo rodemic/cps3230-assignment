@@ -45,7 +45,10 @@ public class MessagingSystem {
     }
 
     public static String login(String loginkey, String agentId){
-        String sessionKey = "";
+        String sessionKey = "15";
+
+        SessionToken st = new SessionToken(sessionKey,provider.getCurrTime());
+        sts.add(st);
 
         return sessionKey;
     }
@@ -54,6 +57,8 @@ public class MessagingSystem {
         if(message.length() > 140) return false;
         for (SessionToken s : sts) {
             if (s.getSessionKey().equals(sessionkey)) {
+                long a = provider.getCurrTime();
+                long b = s.getTimestamp();
                 if(provider.getCurrTime() - s.getTimestamp() >= 600000) return false;
                 for (String st : as) {
                     if (st.equals(targetAgentId)) {
@@ -76,7 +81,4 @@ public class MessagingSystem {
         }
         return false;
     }
-
-
-
 }

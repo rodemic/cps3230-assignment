@@ -13,7 +13,7 @@ import static org.junit.Assert.assertNull;
 public class MessagingSystemTest{
     
     @Before
-    void setup(){
+    public void setup(){
         MessagingSystem.populateAgentList();
     }
 
@@ -26,7 +26,7 @@ public class MessagingSystemTest{
     @Test
     public void addExistingAgent(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(true,MessagingSystem.addAgent("agent1"));
+        assertEquals(false,MessagingSystem.addAgent("agent1"));
     }
 
     @Test
