@@ -13,7 +13,7 @@ public class MessagingSystem {
     private static List<Mailbox> mbs = new ArrayList<>();
     private static List<SessionToken> sts = new ArrayList<>();
 
-    private static TimeProvider provider;
+    private static TimeProvider provider = new RealTimeProvider();
 
     public static void setTimeProvider(TimeProvider p){
         provider = p;
