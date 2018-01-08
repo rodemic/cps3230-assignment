@@ -9,10 +9,12 @@ public class MessagingSystem {
 
     private List<LoginToken> lts;
     private List<Mailbox> mbs;
+    private List<SessionToken> sts;
 
     public MessagingSystem(){
         lts = new ArrayList<>();
         mbs = new ArrayList<>();
+        sts = new ArrayList<>();
     }
 
     public boolean registerLoginKey(String loginkey, String agentId){
@@ -22,6 +24,12 @@ public class MessagingSystem {
             return true;
         }
         else return false;
+    }
+
+    public String login(String loginkey, String agentId){
+        String sessionKey = "";
+
+        return sessionKey;
     }
 
     public boolean sendMessage(String sessionkey, String sourceAgentId, String targetAgentId, String message){
@@ -34,5 +42,7 @@ public class MessagingSystem {
 
         return true;
     }
+
+
 
 }
