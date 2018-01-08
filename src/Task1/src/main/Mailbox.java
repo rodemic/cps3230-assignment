@@ -37,8 +37,9 @@ public class Mailbox {
     }
 
     public Boolean hasMessages() {
+        System.out.println("ho");
         for (Message m:ms) {
-            if(m.getTimeStamp()-currentTimeMillis() < 1800000)
+            if(currentTimeMillis()-m.getTimeStamp() < 1800000)
                 return true;
             else{
                 ms.remove(m);

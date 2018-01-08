@@ -1,9 +1,9 @@
 package main;
 
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-
 import static java.lang.System.currentTimeMillis;
 
 public interface Supervisor {
@@ -19,8 +19,8 @@ public interface Supervisor {
                 return null;
             }
             String hash = Long.toString(currentTimeMillis())+a.getID();
-            byte[] loginKeyBytes = md.digest(hash.getBytes());
-            String loginKey = loginKeyBytes.toString().substring(1,11);
+            md.update(hash.getBytes(),0,hash.length());
+            String loginKey = new BigInteger(md.digest()).toString().substring(0,10);
             System.out.println(loginKey);
             if(MessagingSystem.registerLoginKey(loginKey,a.getID()))
                 return loginKey;
