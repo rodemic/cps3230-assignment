@@ -1,12 +1,13 @@
 package test;
 
+import main.MessagingSystem;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class MessagingSystem {
+public class MessagingSystemTest{
 
     MessagingSystem ms;
     @Before
