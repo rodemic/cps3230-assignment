@@ -4,7 +4,9 @@ import main.Agent;
 import main.Supervisor;
 import org.junit.Test;
 
+import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class SupervisorTest{
     private Agent a;
@@ -12,12 +14,12 @@ public class SupervisorTest{
     @Test
     public void LoginSuccess(){
         a = new Agent("123","name");
-        assertEquals(true,Supervisor.getLoginKey(a));
+        assertNotNull(Supervisor.getLoginKey(a));
     }
 
     @Test
     public void LoginFailure(){
-        a = new Agent("123","name");
-        assertEquals(false,Supervisor.getLoginKey(a));
+        a = new Agent("spy-123","name");
+        assertNull(Supervisor.getLoginKey(a));
     }
 }
