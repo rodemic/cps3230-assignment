@@ -9,7 +9,8 @@ public class Mailbox {
     String ownerId;
     private List<Message> ms;
 
-    public Mailbox(){
+    public Mailbox(String ownerId){
+        this.ownerId = ownerId;
         ms = new ArrayList<>();
     }
 
