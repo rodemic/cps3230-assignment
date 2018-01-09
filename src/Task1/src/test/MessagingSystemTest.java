@@ -102,7 +102,7 @@ public class MessagingSystemTest{
         String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-570000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+570000));
         assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent2","hello"));
     }
 
