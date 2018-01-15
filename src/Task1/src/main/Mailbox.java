@@ -18,6 +18,10 @@ public class Mailbox {
         ms = new ArrayList<>();
     }
 
+    public List<Message> getMessages() {
+        return ms;
+    }
+
     public Message consumeNextMessage() {
         if(hasMessages()){
             Message m = ms.get(0);
@@ -37,15 +41,8 @@ public class Mailbox {
     }
 
     public Boolean hasMessages() {
-        System.out.println("ho");
-        for (int i = 0; i < ms.size(); i++) {
-            Message m = ms.get(i);
-            if (currentTimeMillis() - m.getTimeStamp() < 1800000)
-                return true;
-            else {
-                ms.remove(m);
-            }
-        }
-        return false;
+        //System.out.println("ho");
+        if(ms.size() > 0) return true;
+        else return false;
     }
 }

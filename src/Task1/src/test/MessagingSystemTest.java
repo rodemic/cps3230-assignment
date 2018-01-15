@@ -91,7 +91,7 @@ public class MessagingSystemTest{
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(true, MessagingSystem.sendMessage(st, "agent1", "agent2","hello"));
+        assertEquals(true, MessagingSystem.sendMessage(st, "agent2","hello"));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class MessagingSystemTest{
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
-        assertEquals(false, MessagingSystem.sendMessage(st, "agent1", "agent2","hello"));
+        assertEquals(false, MessagingSystem.sendMessage(st, "agent2","hello"));
     }
 
     @Test
@@ -116,7 +116,7 @@ public class MessagingSystemTest{
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
-        assertEquals(false, MessagingSystem.sendMessage(st, "agent1", "agent2","hello"));
+        assertEquals(false, MessagingSystem.sendMessage(st, "agent2","hello"));
     }
 
     @Test
@@ -128,22 +128,22 @@ public class MessagingSystemTest{
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
-        assertEquals(false, MessagingSystem.sendMessage(st, "agent1", "agent7","hello"));
+        assertEquals(false, MessagingSystem.sendMessage(st,"agent7","hello"));
     }
 
     @Test
     public void sendMessageFailMessageTooLong(){
         String message = "This is a very long message as it will be longer than 140 characters. This message is being written to test the issue of sending a very long message.";
-
+        LoginToken lt = new LoginToken("loginkey10", "agent1", currentTimeMillis());
 
         //Source Agent
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+1000));
         MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
+        SessionToken st = MessagingSystem.login(lt, "agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target but message too long
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+30000));
-        assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent7",message));
+        assertEquals(false, MessagingSystem.sendMessage(st, "agent7",message));
     }
 
 }

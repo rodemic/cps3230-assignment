@@ -19,4 +19,7 @@ public class SessionToken {
         return timestamp;
     }
 
+    public String getAgentID() {
+        return agentID;
+    }
 }

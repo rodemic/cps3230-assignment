@@ -47,7 +47,7 @@ public class MessagingSystem {
 
     public static SessionToken login(LoginToken lt, String agentId){
         SessionToken st = null;
-        if(lts.contains(lt) && lt.getTimeStamp() > provider.getCurrTime()-60000 ) {
+        if(lts.contains(lt) && !checkTimeUp(lt.getTimeStamp(),1)) {
             MessageDigest md;
             try {
                 md = MessageDigest.getInstance("SHA-256");
@@ -64,23 +64,21 @@ public class MessagingSystem {
         return st;
     }
 
-    public static boolean sendMessage(SessionToken s, String sourceAgentId, String targetAgentId, String message){
+    public static boolean sendMessage(SessionToken s, String targetAgentId, String message){
         if(message.length() > 140) return false;
             if (sts.contains(s)) {
-                long a = provider.getCurrTime();
-                long b = s.getTimestamp();
-                if(provider.getCurrTime() - s.getTimestamp() >= 600000) return false;
+                if(checkTimeUp(s.getTimestamp(),2)) return false;
                 for (String st : as) {
                     if (st.equals(targetAgentId)) {
                         for (Mailbox mb : mbs) {
                             if (mb.getOwnerId().equals(targetAgentId)) {
-                                Message m = new Message(sourceAgentId, targetAgentId, provider.getCurrTime(), message);
+                                Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
                                 mb.addMessage(m);
                                 return true;
                             }
                         }
                         Mailbox nmb = new Mailbox(targetAgentId);
-                        Message m = new Message(sourceAgentId, targetAgentId, provider.getCurrTime(), message);
+                        Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
                         nmb.addMessage(m);
                         mbs.add(nmb);
                         return true;
@@ -89,5 +87,37 @@ public class MessagingSystem {
                 return false;
             }
         return false;
+    }
+
+    public static Mailbox sendMailBox(SessionToken s){
+        if(sts.contains(s)){
+            if(checkTimeUp(s.getTimestamp(),2)) return null;
+            for(Mailbox mb : mbs){
+                if(mb.getOwnerId().equals(s.getAgentID())){
+                    List<Message> ms = mb.getMessages();
+                    for (int i = 0; i < ms.size(); i++) {
+                        Message m = ms.get(i);
+                        if (checkTimeUp(ms.get(i).getTimeStamp(), 3)) {
+                            ms.remove(m);
+                        }
+                    }
+                    return mb;
+                }
+            }
+            return null;
+        }
+        return null;
+    }
+
+    public static boolean checkTimeUp(long timeStamp, int scenario){
+        switch(scenario){
+            case 1: //For login timestamp
+                if(provider.getCurrTime() - timeStamp >= 60000) return true;
+            case 2: //For session timestamp
+                if(provider.getCurrTime() - timeStamp >= 600000) return true;
+            case 3: //For Mailbox timestamp
+                if(provider.getCurrTime() - timeStamp >= 1800000) return true;
+            default: return false;
+        }
     }
 }
