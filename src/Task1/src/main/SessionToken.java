@@ -11,10 +11,6 @@ public class SessionToken {
         this.agentID = agentID;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }

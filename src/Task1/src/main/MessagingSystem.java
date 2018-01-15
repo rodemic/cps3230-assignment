@@ -17,6 +17,10 @@ public class MessagingSystem {
 
     private static TimeProvider provider = new RealTimeProvider();
 
+    public static List<Mailbox> getMailbox(){
+        return mbs;
+    }
+
     public static void setTimeProvider(TimeProvider p){
         provider = p;
     }
