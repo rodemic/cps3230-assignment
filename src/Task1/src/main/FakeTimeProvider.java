@@ -15,9 +15,4 @@ public class FakeTimeProvider implements TimeProvider {
     public long getCurrTime() {
         return time;
     }
-    public void setCurrTime(long t){
-        time = t;
-    }
-
-
 }

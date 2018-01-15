@@ -10,4 +10,8 @@ public class LoginToken {
         this.agentId = agentId;
         this.timestamp = timestamp;
     }
+
+    public String getLoginKey() {
+        return loginkey;
+    }
 }

@@ -56,78 +56,79 @@ public class MessagingSystemTest{
     @Test
     public void loginSuccess(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        assertNotNull(MessagingSystem.login("loginkey10", "agent1"));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        assertNotNull(lt);
     }
 
     @Test
     public void loginFail(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-60000));
-        MessagingSystem.registerLoginKey("loginkey11", "agent1");
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey11", "agent1");
         MessagingSystem.setTimeProvider(new RealTimeProvider());
-        assertNull(MessagingSystem.login("loginkey11", "agent1"));
+        assertNull(lt);
     }
 
     @Test
     public void loginFailDueToKey(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        assertNull(MessagingSystem.login("loginkey12", "agent1"));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        assertNull(lt);
     }
 
     @Test
     public void loginFailDueToID(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        assertNull(MessagingSystem.login("loginkey10", "agent2"));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        assertNull(lt);
     }
 
     @Test
     public void sendMessageSuccessful(){
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(true, MessagingSystem.sendMessage(sessionkey, "agent1", "agent2","hello"));
+        assertEquals(true, MessagingSystem.sendMessage(st, "agent1", "agent2","hello"));
     }
 
     @Test
     public void sendMessageFailTimeOut(){
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
-        assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent2","hello"));
+        assertEquals(false, MessagingSystem.sendMessage(st, "agent1", "agent2","hello"));
     }
 
     @Test
-    public void sendMessageFailChangedSessionKey(){
+    public void sendMessageFailChangedSessionToken(){
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        String sessionkey = MessagingSystem.login("loginkey10","agent1") + "111"; //sessionkeygenerated
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1");//sessionkeygenerated
+        st = new SessionToken("12345678901234567890123456789012345678901234567890",currentTimeMillis());
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
-        assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent2","hello"));
+        assertEquals(false, MessagingSystem.sendMessage(st, "agent1", "agent2","hello"));
     }
 
     @Test
     public void sendMessageFailInvalidTargetAgent(){
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+30000));
-        assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent7","hello"));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
+        assertEquals(false, MessagingSystem.sendMessage(st, "agent1", "agent7","hello"));
     }
 
     @Test
