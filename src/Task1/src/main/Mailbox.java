@@ -41,7 +41,6 @@ public class Mailbox {
     }
 
     public Boolean hasMessages() {
-        //System.out.println("ho");
         if(ms.size() > 0) return true;
         else return false;
     }
