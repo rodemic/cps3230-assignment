@@ -13,10 +13,6 @@ public class SessionToken {
         messageLimit = 0;
     }
 
-    public String getSessionKey() {
-        return sessionKey;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }

@@ -5,10 +5,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static java.lang.System.currentTimeMillis;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class MessagingSystemTest{
     
@@ -103,7 +104,7 @@ public class MessagingSystemTest{
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(true, MessagingSystem.sendMessage(st, "agent2","hello"));
+        MessagingSystem.sendMessage(st, "agent2","Hello.");
 
         //Source Agent sending second Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1000));
@@ -160,6 +161,116 @@ public class MessagingSystemTest{
         //Source Agent sending Message to Target but message too long
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+30000));
         assertEquals(false, MessagingSystem.sendMessage(st, "agent7",message));
+    }
+
+    @Test
+    public void sendMailBoxSuccess(){
+        List<Mailbox> mbs;
+        List<Message> ms = new ArrayList<>();
+
+        //Source Agent
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
+
+        //Source Agent sending Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 500));
+        MessagingSystem.sendMessage(st, "agent2","Hello.");
+
+        //Source Agent sending second Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again.");
+
+        mbs = MessagingSystem.getMailbox();
+        for(Mailbox mb: mbs){
+            if(mb.getOwnerId().equals("agent2")){
+                ms = mb.getMessages();
+                break;
+            }
+        }
+
+        //Target Agent login
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 2000));
+        lt = MessagingSystem.registerLoginKey("loginkey11", "agent2");
+        st = MessagingSystem.login(lt,"agent2"); //sessionkeygenerated
+
+        //Target gets Mailbox from system
+        assertEquals(ms, MessagingSystem.sendMailBox(st).getMessages());
+    }
+
+    @Test
+    public void sendMailBoxSuccessWithRemovedMessages(){
+        List<Mailbox> mbs;
+        List<Message> ms = new ArrayList<>();
+
+        //Source Agent
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
+
+        //Source Agent sending Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 500));
+        MessagingSystem.sendMessage(st, "agent2","Hello.");
+
+        //Source Agent sending second Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again.");
+
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 2000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again 2.");
+
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 3000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again 3.");
+
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 10000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again 4.");
+
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 50000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again 5.");
+
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 100000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again 6.");
+
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1800000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again 7.");
+
+        mbs = MessagingSystem.getMailbox();
+        for(Mailbox mb: mbs){
+            if(mb.getOwnerId().equals("agent2")){
+                ms = mb.getMessages();
+                break;
+            }
+        }
+
+        //Target Agent login
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 2000000));
+        lt = MessagingSystem.registerLoginKey("loginkey11", "agent2");
+        st = MessagingSystem.login(lt,"agent2"); //sessionkeygenerated
+
+        //Target gets Mailbox from system
+        assertEquals(ms, MessagingSystem.sendMailBox(st).getMessages());
+    }
+
+    @Test
+    public void readMessagesNullWithNoMailbox(){
+        //Agent
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
+
+        //Agent tries getting messages
+        assertNull(MessagingSystem.sendMailBox(st));
+    }
+
+    @Test
+    public void readMessagesNullNonExistantSessionKey(){
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
+
+        st = new SessionToken("000000000000000000000000000000000000000000000000000000000000001111",currentTimeMillis()+100000, "agent1");
+
+        assertNull(MessagingSystem.sendMailBox(st));
     }
 
 }
