@@ -46,19 +46,21 @@ public class MessagingSystem {
     }
 
     public static SessionToken login(LoginToken lt, String agentId){
-        MessageDigest md;
-        try {
-            md = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            return null;
+        SessionToken st = null;
+        if(lts.contains(lt) && lt.getTimeStamp() > provider.getCurrTime()-60000 ) {
+            MessageDigest md;
+            try {
+                md = MessageDigest.getInstance("SHA-256");
+            } catch (NoSuchAlgorithmException e) {
+                return null;
+            }
+            String hash = Long.toString(currentTimeMillis()) + lt.getLoginKey();
+            md.update(hash.getBytes(), 0, hash.length());
+            String sessionKey = new BigInteger(md.digest()).toString().substring(0, 50);
+
+            st = new SessionToken(sessionKey, provider.getCurrTime(), agentId);
+            sts.add(st);
         }
-        String hash = Long.toString(currentTimeMillis())+lt.getLoginKey();
-        md.update(hash.getBytes(),0,hash.length());
-        String sessionKey = new BigInteger(md.digest()).toString().substring(0,50);
-
-        SessionToken st = new SessionToken(sessionKey,provider.getCurrTime());
-        sts.add(st);
-
         return st;
     }
 

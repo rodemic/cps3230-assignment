@@ -38,19 +38,19 @@ public class MessagingSystemTest{
     @Test
     public void registerLoginKeyCheckCharactersFailMore(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(false, MessagingSystem.registerLoginKey("loginkeylongerthan10", "agent1"));
+        assertNull(MessagingSystem.registerLoginKey("loginkeylongerthan10", "agent1"));
     }
 
     @Test
     public void registerLoginKeyCheckCharactersFailLess(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(false, MessagingSystem.registerLoginKey("loginless", "agent1"));
+        assertNull(MessagingSystem.registerLoginKey("loginless", "agent1"));
     }
 
     @Test
     public void registerLoginKeyCheckCharactersSuccess(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        assertEquals(true, MessagingSystem.registerLoginKey("loginkey10", "agent1"));
+        assertNotNull(MessagingSystem.registerLoginKey("loginkey10", "agent1"));
     }
 
     @Test
@@ -61,24 +61,24 @@ public class MessagingSystemTest{
     }
 
     @Test
-    public void loginFail(){
+    public void loginFailDueToTime(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-60000));
         LoginToken lt = MessagingSystem.registerLoginKey("loginkey11", "agent1");
         MessagingSystem.setTimeProvider(new RealTimeProvider());
+        assertNull(MessagingSystem.login(lt,"agent1"));
+    }
+
+    @Test
+    public void loginFailDueToKeyTooLong(){
+        MessagingSystem.setTimeProvider(new RealTimeProvider());
+        LoginToken lt = MessagingSystem.registerLoginKey("01234567890", "agent1");
         assertNull(lt);
     }
 
     @Test
-    public void loginFailDueToKey(){
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
-        assertNull(lt);
-    }
-
-    @Test
-    public void loginFailDueToID(){
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
-        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+    public void loginFailDueToKeyTooShort(){
+        MessagingSystem.setTimeProvider(new RealTimeProvider());
+        LoginToken lt = MessagingSystem.registerLoginKey("123456789", "agent1");
         assertNull(lt);
     }
 
@@ -112,7 +112,7 @@ public class MessagingSystemTest{
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
         LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
         SessionToken st = MessagingSystem.login(lt,"agent1");//sessionkeygenerated
-        st = new SessionToken("12345678901234567890123456789012345678901234567890",currentTimeMillis());
+        st = new SessionToken("12345678901234567890123456789012345678901234567890",currentTimeMillis(),"agent1");
 
         //Source Agent sending Message to Target
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
