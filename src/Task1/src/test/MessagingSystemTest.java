@@ -94,6 +94,21 @@ public class MessagingSystemTest{
         assertEquals(true, MessagingSystem.sendMessage(st, "agent2","hello"));
     }
 
+    public void sendMessageSuccessfulToAgentWithMailbox(){
+        //Source Agent
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
+
+        //Source Agent sending Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        assertEquals(true, MessagingSystem.sendMessage(st, "agent2","hello"));
+
+        //Source Agent sending second Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1000));
+        assertEquals(true, MessagingSystem.sendMessage(st, "agent2","Hello again, just checking."));
+    }
+
     @Test
     public void sendMessageFailTimeOut(){
         //Source Agent
