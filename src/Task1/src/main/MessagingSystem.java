@@ -67,8 +67,6 @@ public class MessagingSystem {
     public static boolean sendMessage(SessionToken s, String sourceAgentId, String targetAgentId, String message){
         if(message.length() > 140) return false;
             if (sts.contains(s)) {
-                long a = provider.getCurrTime();
-                long b = s.getTimestamp();
                 if(provider.getCurrTime() - s.getTimestamp() >= 600000) return false;
                 for (String st : as) {
                     if (st.equals(targetAgentId)) {
