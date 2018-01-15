@@ -97,12 +97,12 @@ public class MessagingSystemTest{
     @Test
     public void sendMessageFailTimeOut(){
         //Source Agent
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-30000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
         MessagingSystem.registerLoginKey("loginkey10", "agent1");
         String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+570000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
         assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent2","hello"));
     }
 
@@ -114,19 +114,19 @@ public class MessagingSystemTest{
         String sessionkey = MessagingSystem.login("loginkey10","agent1") + "111"; //sessionkeygenerated
 
         //Source Agent sending Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-570000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
         assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent2","hello"));
     }
 
     @Test
     public void sendMessageFailInvalidTargetAgent(){
         //Source Agent
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-30000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
         MessagingSystem.registerLoginKey("loginkey10", "agent1");
         String sessionkey = MessagingSystem.login("loginkey10","agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()-570000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()+600000));
         assertEquals(false, MessagingSystem.sendMessage(sessionkey, "agent1", "agent7","hello"));
     }
 

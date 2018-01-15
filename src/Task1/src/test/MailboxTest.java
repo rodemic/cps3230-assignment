@@ -24,7 +24,7 @@ public class MailboxTest{
 
     @Test
     public void consumeMessageLate(){
-        Message m = new Message("abc","def",currentTimeMillis()-1800000,"hello");
+        Message m = new Message("abc","def",(currentTimeMillis()-1800000),"hello");
         mb.addMessage(m);
         assertNull(mb.consumeNextMessage());
     }
@@ -43,7 +43,7 @@ public class MailboxTest{
 
     @Test
     public void hasMessagesLate(){
-        Message m = new Message("abc","def",currentTimeMillis()-1800000,"hello");
+        Message m = new Message("abc","def",(currentTimeMillis()-1800000),"hello");
         mb.addMessage(m);
         assertFalse(mb.hasMessages());
     }
