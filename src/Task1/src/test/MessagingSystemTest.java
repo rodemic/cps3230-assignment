@@ -94,6 +94,7 @@ public class MessagingSystemTest{
         assertEquals(true, MessagingSystem.sendMessage(st, "agent2","hello"));
     }
 
+    @Test
     public void sendMessageSuccessfulToAgentWithMailbox(){
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
