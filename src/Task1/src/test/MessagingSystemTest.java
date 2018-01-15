@@ -146,7 +146,4 @@ public class MessagingSystemTest{
         assertEquals(false, MessagingSystem.sendMessage(st, "agent7",message));
     }
 
-    @Test
-
-
 }
