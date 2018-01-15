@@ -14,4 +14,8 @@ public class LoginToken {
     public String getLoginKey() {
         return loginkey;
     }
+
+    public long getTimeStamp() {
+        return timestamp;
+    }
 }

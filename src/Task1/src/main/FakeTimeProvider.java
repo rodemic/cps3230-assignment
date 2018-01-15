@@ -1,7 +1,5 @@
 package main;
 
-import static java.lang.System.currentTimeMillis;
-
 /**
  * Created by rodemic on 08/01/2018.
  */
