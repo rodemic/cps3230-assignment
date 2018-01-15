@@ -1,5 +1,8 @@
 package main;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +48,15 @@ public class MessagingSystem {
     }
 
     public static String login(String loginkey, String agentId){
-        String sessionKey = "15";
+        MessageDigest md;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            return null;
+        }
+        String hash = Long.toString(currentTimeMillis())+loginkey;
+        md.update(hash.getBytes(),0,hash.length());
+        String sessionKey = new BigInteger(md.digest()).toString().substring(0,50);
 
         SessionToken st = new SessionToken(sessionKey,provider.getCurrTime());
         sts.add(st);
