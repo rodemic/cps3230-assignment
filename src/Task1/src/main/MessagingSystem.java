@@ -70,17 +70,26 @@ public class MessagingSystem {
                 if(checkTimeUp(s.getTimestamp(),2)) return false;
                 for (String st : as) {
                     if (st.equals(targetAgentId)) {
-                        for (Mailbox mb : mbs) {
-                            if (mb.getOwnerId().equals(targetAgentId)) {
-                                Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
-                                mb.addMessage(m);
-                                return true;
+                        Mailbox mb = null;
+                        for (int i = 0; i < mbs.size(); i++) {
+                            Mailbox currMB = mbs.get(i);
+                            if (currMB.getOwnerId().equals(targetAgentId)) {
+                                mb = currMB;
                             }
                         }
-                        Mailbox nmb = new Mailbox(targetAgentId);
+                        if(mb == null){
+                            mb = new Mailbox(targetAgentId);
+                            mbs.add(mb);
+                        }
                         Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
-                        nmb.addMessage(m);
-                        mbs.add(nmb);
+                        mb.addMessage(m);
+                        for(SessionToken sToken: sts){
+                            if(sToken.getAgentID().equals(targetAgentId) || sToken == s)
+                                sToken.incrMsgLim();
+                                if(!sToken.checkMessageLimit()){
+
+                                }
+                        }
                         return true;
                     }
                 }
