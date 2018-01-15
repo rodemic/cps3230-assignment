@@ -7,7 +7,7 @@ public class Agent{
 
     private String ID;
     private String name;
-    private String sessionKey;
+    private SessionToken st;
     private Scanner s;
 
     public Agent(String ID, String name) {
@@ -17,12 +17,12 @@ public class Agent{
     }
 
     public boolean login() {
-        String loginKey = Supervisor.getLoginKey(this);
-        if(loginKey == null)return false;
+        LoginToken lt = Supervisor.getLoginKey(this);
+        if(lt == null)return false;
         System.out.print("Enter your ID:");
         String inputID = s.next();
-        sessionKey = MessagingSystem.login(loginKey,inputID);
-        return sessionKey != null;
+        st = MessagingSystem.login(lt,inputID);
+        return st != null;
     }
 
     public void setScanner(Scanner s){

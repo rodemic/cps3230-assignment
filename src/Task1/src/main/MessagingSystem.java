@@ -3,7 +3,6 @@ package main;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,36 +37,34 @@ public class MessagingSystem {
         return true;
     }
 
-    public static boolean registerLoginKey(String loginkey, String agentId){
+    public static LoginToken registerLoginKey(String loginkey, String agentId){
+        LoginToken lt = null;
         if(loginkey.length() == 10){
-            LoginToken lt = new LoginToken(loginkey,agentId,provider.getCurrTime());
+            lt = new LoginToken(loginkey,agentId,provider.getCurrTime());
             lts.add(lt);
-            return true;
-        }
-        else return false;
+        }return lt;
     }
 
-    public static String login(String loginkey, String agentId){
+    public static SessionToken login(LoginToken lt, String agentId){
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
-        String hash = Long.toString(currentTimeMillis())+loginkey;
+        String hash = Long.toString(currentTimeMillis())+lt.getLoginKey();
         md.update(hash.getBytes(),0,hash.length());
         String sessionKey = new BigInteger(md.digest()).toString().substring(0,50);
 
         SessionToken st = new SessionToken(sessionKey,provider.getCurrTime());
         sts.add(st);
 
-        return sessionKey;
+        return st;
     }
 
-    public static boolean sendMessage(String sessionkey, String sourceAgentId, String targetAgentId, String message){
+    public static boolean sendMessage(SessionToken s, String sourceAgentId, String targetAgentId, String message){
         if(message.length() > 140) return false;
-        for (SessionToken s : sts) {
-            if (s.getSessionKey().equals(sessionkey)) {
+            if (sts.contains(s)) {
                 long a = provider.getCurrTime();
                 long b = s.getTimestamp();
                 if(provider.getCurrTime() - s.getTimestamp() >= 600000) return false;
@@ -89,7 +86,6 @@ public class MessagingSystem {
                 }
                 return false;
             }
-        }
         return false;
     }
 }
