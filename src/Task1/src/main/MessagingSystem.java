@@ -50,8 +50,9 @@ public class MessagingSystem {
     }
 
     public static SessionToken login(LoginToken lt, String agentId){
+        cleanUp();
         SessionToken st = null;
-        if(lts.contains(lt) && !checkTimeUp(lt.getTimeStamp(),1)) {
+        if(lts.contains(lt)) {
             MessageDigest md;
             try {
                 md = MessageDigest.getInstance("SHA-256");
@@ -69,9 +70,9 @@ public class MessagingSystem {
     }
 
     public static boolean sendMessage(SessionToken s, String targetAgentId, String message){
+        cleanUp();
         if(message.length() > 140) return false;
             if (sts.contains(s)) {
-                if(checkTimeUp(s.getTimestamp(),2)) return false;
                 for (String st : as) {
                     if (st.equals(targetAgentId)) {
                         Mailbox mb = null;
@@ -89,37 +90,62 @@ public class MessagingSystem {
                         message = message.replaceAll("ginger","");
                         Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
                         mb.addMessage(m);
-                        for (int i = 0; i < sts.size(); i++) {
-                            SessionToken sToken = sts.get(i);
-                            if (sToken.getAgentID().equals(targetAgentId) || sToken == s)
+                        for (SessionToken sToken : sts) {
+                            if (sToken.getAgentID().equals(targetAgentId) || sToken == s) {
                                 sToken.incrMsgLim();
-                                System.out.println(sToken.getAgentID()+": "+sToken.checkMessageLimit());
-                            if (!sToken.checkMessageLimit())
-                                sts.remove(sToken);
-                        }return true;
+                            }
+                        }
+                        return true;
                     }
                 }return false;
             }return false;
     }
 
     public static Mailbox sendMailBox(SessionToken s){
+        cleanUp();
         if(sts.contains(s)){
-            if(checkTimeUp(s.getTimestamp(),2)) return null;
             for(Mailbox mb : mbs){
                 if(mb.getOwnerId().equals(s.getAgentID())){
                     List<Message> ms = mb.getMessages();
-                    for (int i = 0; i < ms.size(); i++) {
-                        Message m = ms.get(i);
-                        if (checkTimeUp(ms.get(i).getTimeStamp(), 3)) {
-                            ms.remove(m);
-                        }
-                    }
                     return mb;
                 }
             }
             return null;
         }
         return null;
+    }
+
+    private static void cleanUp(){
+        for (int i = 0; i < sts.size(); i++) {
+            SessionToken sToken = sts.get(i);
+            if (!sToken.checkMessageLimit() || checkTimeUp(sToken.getTimestamp(),2)) {
+                    sts.remove(sToken);
+                    i--;
+            }
+        }
+        for(int i = 0;i < lts.size(); i++){
+            LoginToken lToken = lts.get(i);
+            if(checkTimeUp(lToken.getTimeStamp(),1)){
+                lts.remove(lToken);
+                i--;
+            }
+        }
+        for(int i = 0;i < mbs.size(); i++){
+            Mailbox mb = mbs.get(i);
+            List<Message> ms = mb.getMessages();
+
+            for (int j = 0; i < ms.size(); i++) {
+                Message m = ms.get(i);
+                if (checkTimeUp(ms.get(i).getTimeStamp(), 3)) {
+                    ms.remove(m);
+                }
+            }
+            if(ms.isEmpty()) {
+                mbs.remove(mb);
+                i--;
+            }else
+                mb.setMessages(ms);
+        }
     }
 
     private static boolean checkTimeUp(long timeStamp, int scenario){

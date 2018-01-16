@@ -344,4 +344,15 @@ public class MessagingSystemTest{
         assertFalse(MessagingSystem.sendMessage(st2,"agent1","helloF"));
     }
 
+    @Test
+    public void testCensorMultiple(){
+        MessagingSystem.setTimeProvider(new RealTimeProvider());
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10","agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1");
+        MessagingSystem.sendMessage(st,"agent1","recipeQgingerSnuclear");
+        Mailbox mb = MessagingSystem.sendMailBox(st);
+        Message m = mb.consumeNextMessage();
+        assertEquals("QS",m.getMessage());
+    }
+
 }

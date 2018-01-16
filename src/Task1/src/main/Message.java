@@ -16,4 +16,8 @@ public class Message {
     long getTimeStamp() {
         return timeStamp;
     }
+
+    public String getMessage() {
+        return message;
+    }
 }

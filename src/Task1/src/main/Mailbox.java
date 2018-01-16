@@ -40,4 +40,8 @@ public class Mailbox {
     public Boolean hasMessages() {
         return ms.size() > 0;
     }
+
+    void setMessages(List<Message> messages) {
+        this.ms = messages;
+    }
 }
