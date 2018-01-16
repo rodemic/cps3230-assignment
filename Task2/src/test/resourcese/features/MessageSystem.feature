@@ -1,12 +1,4 @@
 Feature: Using The Message System
-  As an agent
-  I want to send messages to other agents and read messages from other agents
-
-  Background: User navigates to the Messaging System website
-    Given I am on the "Message System Website" on page URL "localhost/Message-System"
-    Then I should see "Send Message" message
-    And I should see "Read Messages" message
-    And I should see "Exit Message System" message
 
   Scenario: Surpassing message limit
     Given I am a logged in agent

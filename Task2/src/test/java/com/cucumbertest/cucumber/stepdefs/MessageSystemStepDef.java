@@ -1,15 +1,17 @@
 package com.cucumbertest.cucumber.stepdefs;
 
 import cucumber.api.PendingException;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java8.En;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 public class MessageSystemStepDef implements En {
+    WebDriver browser;
+
     public MessageSystemStepDef() {
         Given("^I am a logged in agent$", () -> {
-            // Write code here that turns the phrase above into concrete actions
-            throw new PendingException();
-        });
-        Given("^I am on the \"([^\"]*)\" on page URL \"([^\"]*)\"$", (String arg0, String arg1) -> {
             // Write code here that turns the phrase above into concrete actions
             throw new PendingException();
         });
@@ -49,5 +51,15 @@ public class MessageSystemStepDef implements En {
             // Write code here that turns the phrase above into concrete actions
             throw new PendingException();
         });
+    }
+    @Before
+    public void setup() {
+        System.setProperty("webdriver.chrome.driver", "./chromedriver");
+        browser = new ChromeDriver();
+    }
+
+    @After
+    public void teardown() {
+        browser.quit();
     }
 }
