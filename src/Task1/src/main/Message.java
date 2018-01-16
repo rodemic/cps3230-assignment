@@ -13,7 +13,7 @@ public class Message {
         this.message = message;
     }
 
-    public long getTimeStamp() {
+    long getTimeStamp() {
         return timeStamp;
     }
 }

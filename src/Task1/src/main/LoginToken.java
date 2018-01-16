@@ -1,9 +1,9 @@
 package main;
 
 public class LoginToken {
-    String loginkey;
-    String agentId;
-    long timestamp;
+    private String loginkey;
+    private String agentId;
+    private long timestamp;
 
     public LoginToken(String loginkey, String agentId, long timestamp){
         this.loginkey = loginkey;
@@ -11,11 +11,11 @@ public class LoginToken {
         this.timestamp = timestamp;
     }
 
-    public String getLoginKey() {
+    String getLoginKey() {
         return loginkey;
     }
 
-    public long getTimeStamp() {
+    long getTimeStamp() {
         return timestamp;
     }
 }

@@ -13,7 +13,6 @@ public class MailboxTest{
 
     @Before
     public void Before(){
-
         mb = new Mailbox();
     }
 

@@ -13,19 +13,19 @@ public class SessionToken {
         messageLimit = 0;
     }
 
-    public long getTimestamp() {
+    long getTimestamp() {
         return timestamp;
     }
 
-    public void incrMsgLim(){
+    void incrMsgLim(){
         messageLimit++;
     }
 
-    public String getAgentID() {
+    String getAgentID() {
         return agentID;
     }
 
-    public boolean checkMessageLimit(){
+    boolean checkMessageLimit(){
         return messageLimit < 25;
     }
 }

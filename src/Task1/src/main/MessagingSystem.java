@@ -75,8 +75,7 @@ public class MessagingSystem {
                 for (String st : as) {
                     if (st.equals(targetAgentId)) {
                         Mailbox mb = null;
-                        for (int i = 0; i < mbs.size(); i++) {
-                            Mailbox currMB = mbs.get(i);
+                        for (Mailbox currMB : mbs) {
                             if (currMB.getOwnerId().equals(targetAgentId)) {
                                 mb = currMB;
                             }
@@ -85,21 +84,22 @@ public class MessagingSystem {
                             mb = new Mailbox(targetAgentId);
                             mbs.add(mb);
                         }
+                        message = message.replaceAll("recipe","");
+                        message = message.replaceAll("nuclear","");
+                        message = message.replaceAll("ginger","");
                         Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
                         mb.addMessage(m);
-                        for(SessionToken sToken: sts){
-                            if(sToken.getAgentID().equals(targetAgentId) || sToken == s)
+                        for (int i = 0; i < sts.size(); i++) {
+                            SessionToken sToken = sts.get(i);
+                            if (sToken.getAgentID().equals(targetAgentId) || sToken == s)
                                 sToken.incrMsgLim();
-                                if(!sToken.checkMessageLimit()){
-
-                                }
-                        }
-                        return true;
+                                System.out.println(sToken.getAgentID()+": "+sToken.checkMessageLimit());
+                            if (!sToken.checkMessageLimit())
+                                sts.remove(sToken);
+                        }return true;
                     }
-                }
-                return false;
-            }
-        return false;
+                }return false;
+            }return false;
     }
 
     public static Mailbox sendMailBox(SessionToken s){
@@ -122,7 +122,7 @@ public class MessagingSystem {
         return null;
     }
 
-    public static boolean checkTimeUp(long timeStamp, int scenario){
+    private static boolean checkTimeUp(long timeStamp, int scenario){
         switch(scenario){
             case 1: //For login timestamp
                 if(provider.getCurrTime() - timeStamp >= 60000) return true;

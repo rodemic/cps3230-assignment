@@ -3,17 +3,15 @@ package main;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.System.currentTimeMillis;
-
 public class Mailbox {
-    String ownerId;
+    private String ownerId;
     private List<Message> ms;
 
     public Mailbox(){
         ms = new ArrayList<>();
     }
 
-    public Mailbox(String ownerId){
+    Mailbox(String ownerId){
         this.ownerId = ownerId;
         ms = new ArrayList<>();
     }
@@ -35,13 +33,11 @@ public class Mailbox {
         return ownerId;
     }
 
-    public boolean addMessage(Message m) {
+    public void addMessage(Message m) {
         ms.add(m);
-        return true;
     }
 
     public Boolean hasMessages() {
-        if(ms.size() > 0) return true;
-        else return false;
+        return ms.size() > 0;
     }
 }

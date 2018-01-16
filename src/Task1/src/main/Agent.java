@@ -6,13 +6,11 @@ import java.util.Scanner;
 public class Agent{
 
     private String ID;
-    private String name;
     private SessionToken st;
     private Scanner s;
 
     public Agent(String ID, String name) {
         this.ID = ID;
-        this.name = name;
         s = new Scanner(System.in);
     }
 
