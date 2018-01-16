@@ -10,8 +10,8 @@ Feature: Using The Message System
 
   Scenario Outline: Blocked words
     Given I am a logged in agent
-    When I attempt to send the message <message> to another agent
-    Then the other agent should receive the message <new-message>
+    When I attempt to send the message "<message>" to another agent
+    Then the other agent should receive the message "<new-message>"
     Examples:
       |message | new-message |
       |Hello there | Hello there |
