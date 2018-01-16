@@ -27,5 +27,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="io.cucumber:cucumber-java8:Release" level="project" />
+    <orderEntry type="library" name="org.seleniumhq.selenium:selenium-java:Release" level="project" />
   </component>
 </module>
