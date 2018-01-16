@@ -206,7 +206,7 @@ public class MessagingSystemTest{
         SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
 
         //Source Agent sending Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 500));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 2000500));
         MessagingSystem.sendMessage(st, "agent2","Hello.");
 
         //Source Agent sending second Message to Target
@@ -237,7 +237,31 @@ public class MessagingSystemTest{
         st = MessagingSystem.login(lt,"agent2"); //sessionkeygenerated
 
         //Target gets Mailbox from system
-        assertEquals(6, MessagingSystem.sendMailBox(st).getMessages().size());
+        assertEquals(5, MessagingSystem.sendMailBox(st).getMessages().size());
+    }
+
+    @Test
+    public void sendMailBoxAllLateMessages(){
+        //Source Agent
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
+        SessionToken st = MessagingSystem.login(lt,"agent1"); //sessionkeygenerated
+
+        //Source Agent sending Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 2000000));
+        MessagingSystem.sendMessage(st, "agent2","Hello.");
+
+        //Source Agent sending second Message to Target
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 1800000));
+        MessagingSystem.sendMessage(st, "agent2","Hello again.");
+
+        //Target Agent login
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
+        lt = MessagingSystem.registerLoginKey("loginkey11", "agent2");
+        st = MessagingSystem.login(lt,"agent2"); //sessionkeygenerated
+
+        //Target gets Mailbox from system
+        assertNull(MessagingSystem.sendMailBox(st));
     }
 
     @Test
