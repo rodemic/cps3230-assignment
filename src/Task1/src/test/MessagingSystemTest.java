@@ -18,6 +18,11 @@ public class MessagingSystemTest{
         MessagingSystem.populateAgentList();
     }
 
+    @After
+    public void teardown() {
+        MessagingSystem.clearLists();
+    }
+
     @Test
     public void addNewAgent(){
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
@@ -165,9 +170,6 @@ public class MessagingSystemTest{
 
     @Test
     public void sendMailBoxSuccess(){
-        List<Mailbox> mbs;
-        List<Message> ms = new ArrayList<>();
-
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
         LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
@@ -181,28 +183,23 @@ public class MessagingSystemTest{
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1000));
         MessagingSystem.sendMessage(st, "agent2","Hello again.");
 
-        mbs = MessagingSystem.getMailbox();
-        for(Mailbox mb: mbs){
-            if(mb.getOwnerId().equals("agent2")){
-                ms = mb.getMessages();
-                break;
-            }
-        }
-
         //Target Agent login
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 2000));
         lt = MessagingSystem.registerLoginKey("loginkey11", "agent2");
         st = MessagingSystem.login(lt,"agent2"); //sessionkeygenerated
 
+        boolean check = true;
+        String message = MessagingSystem.sendMailBox(st).getMessages().get(0).getMessage();
+        if(message.equals("Hello.")) check &= true;
+        message = MessagingSystem.sendMailBox(st).getMessages().get(0).getMessage();
+        if(message.equals("Hello again.")) check &= true;
+
         //Target gets Mailbox from system
-        assertEquals(ms, MessagingSystem.sendMailBox(st).getMessages());
+        assertTrue(check);
     }
 
     @Test
     public void sendMailBoxSuccessWithRemovedMessages(){
-        List<Mailbox> mbs;
-        List<Message> ms = new ArrayList<>();
-
         //Source Agent
         MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
         LoginToken lt = MessagingSystem.registerLoginKey("loginkey10", "agent1");
@@ -213,42 +210,34 @@ public class MessagingSystemTest{
         MessagingSystem.sendMessage(st, "agent2","Hello.");
 
         //Source Agent sending second Message to Target
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 2000000));
         MessagingSystem.sendMessage(st, "agent2","Hello again.");
 
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 2000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 1800000));
         MessagingSystem.sendMessage(st, "agent2","Hello again 2.");
 
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 3000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 50000));
         MessagingSystem.sendMessage(st, "agent2","Hello again 3.");
 
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 10000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 25000));
         MessagingSystem.sendMessage(st, "agent2","Hello again 4.");
 
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 50000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 10000));
         MessagingSystem.sendMessage(st, "agent2","Hello again 5.");
 
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 100000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 5000));
         MessagingSystem.sendMessage(st, "agent2","Hello again 6.");
 
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 1800000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() - 2000));
         MessagingSystem.sendMessage(st, "agent2","Hello again 7.");
 
-        mbs = MessagingSystem.getMailbox();
-        for(Mailbox mb: mbs){
-            if(mb.getOwnerId().equals("agent2")){
-                ms = mb.getMessages();
-                break;
-            }
-        }
-
         //Target Agent login
-        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis() + 2000000));
+        MessagingSystem.setTimeProvider(new FakeTimeProvider(currentTimeMillis()));
         lt = MessagingSystem.registerLoginKey("loginkey11", "agent2");
         st = MessagingSystem.login(lt,"agent2"); //sessionkeygenerated
 
         //Target gets Mailbox from system
-        assertEquals(ms, MessagingSystem.sendMailBox(st).getMessages());
+        assertEquals(6, MessagingSystem.sendMailBox(st).getMessages().size());
     }
 
     @Test

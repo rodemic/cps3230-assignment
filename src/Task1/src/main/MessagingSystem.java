@@ -17,10 +17,6 @@ public class MessagingSystem {
 
     private static TimeProvider provider = new RealTimeProvider();
 
-    public static List<Mailbox> getMailbox(){
-        return mbs;
-    }
-
     public static void setTimeProvider(TimeProvider p){
         provider = p;
     }
@@ -31,6 +27,13 @@ public class MessagingSystem {
         as.add("agent3");
         as.add("agent4");
         return true;
+    }
+
+    public static void clearLists(){
+        as = new ArrayList<>();
+        lts = new ArrayList<>();
+        mbs = new ArrayList<>();
+        sts = new ArrayList<>();
     }
 
     public static boolean addAgent(String agentId){
