@@ -28,4 +28,8 @@ public class SessionToken {
     boolean checkMessageLimit(){
         return messageLimit < 25;
     }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
 }

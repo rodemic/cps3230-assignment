@@ -68,6 +68,7 @@ public class MessagingSystem {
 
             st = new SessionToken(sessionKey, provider.getCurrTime(), agentId);
             sts.add(st);
+            addAgent(agentId);
         }
         return st;
     }

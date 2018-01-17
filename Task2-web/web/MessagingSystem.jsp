@@ -13,12 +13,21 @@
 </head>
 <body>
 <%
-    String loginKey = request.getParameter("LoginKeyInput");
-    String agentID = request.getParameter("agentID");
-    SessionToken st = MessagingSystem.login(loginKey,agentID);
+    String sessionKey = null;
+    if(request.getParameter("LoginKeyInput")!=null && request.getParameter("agentID")!= null) {
+        String loginKey = request.getParameter("LoginKeyInput");
+        String agentID = request.getParameter("agentID");
+        SessionToken st = MessagingSystem.login(loginKey, agentID);
+        if(st == null)
+            response.sendRedirect("Error.jsp");
+        else
+            sessionKey = st.getSessionKey();
+    }else if(request.getParameter("sessionKey")!= null && request.getParameter("msg") != null){
+        sessionKey = request.getParameter("sessionKey");
+        String msg = request.getParameter("msg");
+        out.print(msg);
+    }
 
-    if(st == null)
-        response.sendRedirect("Error.jsp");
 %>
 
 <script>function toggleHide(divID){
@@ -35,6 +44,15 @@
 <form action="index.jsp">
     <input type="submit" value="Log out" name="LogOutButton"/>
 </form>
+
+<div id="SendMessageBlk" style="display: none">
+    <form action="sendMessage.jsp" method="post">
+        To: <input type="text" name="TargetAgentField">
+    Message: <input type="text" name="MessageField">
+        <input type="text" value="<%= sessionKey%>" style="display: none" name="sessionKey">
+    <input type="submit" name="SubmitMessage">
+    </form>
+</div>
 
 </body>
 </html>

@@ -1,9 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="exploded-war" build-on-make="true" name="Task2:war exploded">
-    <output-path>$PROJECT_DIR$/Task1/output/artifacts/Task2_war_exploded</output-path>
-    <root id="root">
-      <element id="module-output" name="Task2" />
-      <element id="javaee-facet-resources" facet="Task2/web/Web" />
-    </root>
-  </artifact>
-</component>
