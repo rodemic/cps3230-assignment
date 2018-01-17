@@ -16,7 +16,7 @@ public class MessageSystemStepDef implements En {
     public MessageSystemStepDef() {
         Given("^I am a logged in agent$", () -> {
             // Write code here that turns the phrase above into concrete actions
-            browser.get("http://localhost:8080/Index.jsp");
+            browser.get("http://localhost:8080/Task2_web_war_exploded/");
             browser.findElement(By.name("agentID")).sendKeys("agent1");
             browser.findElement(By.name("submit")).click();
 
@@ -76,7 +76,7 @@ public class MessageSystemStepDef implements En {
         });
         Then("^the other agent should receive the message \"([^\"]*)\"$", (String arg0) -> {
             // Write code here that turns the phrase above into concrete actions
-            browser.get("http://localhost:8080/Index.jsp");
+            browser.get("http://localhost:8080/Task2_web_war_exploded/");
             browser.findElement(By.name("agentID")).sendKeys("agent2");
             browser.findElement(By.name("submit")).click();
 
@@ -105,7 +105,7 @@ public class MessageSystemStepDef implements En {
     }
     @Before
     public void setup() {
-        System.setProperty("webdriver.chrome.driver", "./chromedriver");
+        System.setProperty("webdriver.chrome.driver", "chromedriver.exe");
         browser = new ChromeDriver();
     }
 

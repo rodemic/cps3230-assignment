@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" build-on-make="true" name="Task2-web:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/Task2_web_war_exploded</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="Task2-web" />
+        </element>
+        <element id="file-copy" path="$PROJECT_DIR$/Task2-web/WEB-INF/glassfish-web.xml" />
+      </element>
+      <element id="javaee-facet-resources" facet="Task2-web/web/Web" />
+    </root>
+  </artifact>
+</component>

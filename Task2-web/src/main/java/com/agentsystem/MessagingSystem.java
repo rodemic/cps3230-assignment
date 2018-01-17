@@ -21,27 +21,11 @@ public class MessagingSystem {
         provider = p;
     }
 
-    public static boolean populateAgentList(){
-        as.add("agent1");
-        as.add("agent2");
-        as.add("agent3");
-        as.add("agent4");
-        return true;
-    }
-
     public static void clearLists(){
         as = new ArrayList<>();
         lts = new ArrayList<>();
         mbs = new ArrayList<>();
         sts = new ArrayList<>();
-    }
-
-    public static boolean addAgent(String agentId){
-        for (String s:as) {
-            if(s.equals(agentId)) return false;
-        }
-        as.add(agentId);
-        return true;
     }
 
     public static LoginToken registerLoginKey(String loginkey, String agentId){
@@ -69,7 +53,6 @@ public class MessagingSystem {
 
                 st = new SessionToken(sessionKey, provider.getCurrTime(), agentId);
                 sts.add(st);
-                addAgent(agentId);
             }
         }
         return st;
@@ -80,32 +63,27 @@ public class MessagingSystem {
         if(message.length() > 140) return false;
         for (SessionToken s:sts) {
             if (s.getSessionKey().equals(sKey)) {
-                for (String st : as) {
-                    if (st.equals(targetAgentId)) {
-                        Mailbox mb = null;
-                        for (Mailbox currMB : mbs) {
-                            if (currMB.getOwnerId().equals(targetAgentId)) {
-                                mb = currMB;
-                            }
-                        }
-                        if (mb == null) {
-                            mb = new Mailbox(targetAgentId);
-                            mbs.add(mb);
-                        }
-                        message = message.replaceAll("recipe", "");
-                        message = message.replaceAll("nuclear", "");
-                        message = message.replaceAll("ginger", "");
-                        Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
-                        mb.addMessage(m);
-                        for (SessionToken sToken : sts) {
-                            if (sToken.getAgentID().equals(targetAgentId) || sToken == s) {
-                                sToken.incrMsgLim();
-                            }
-                        }
-                        return true;
+                Mailbox mb = null;
+                for (Mailbox currMB : mbs) {
+                    if (currMB.getOwnerId().equals(targetAgentId)) {
+                        mb = currMB;
                     }
                 }
-                return false;
+                if (mb == null) {
+                    mb = new Mailbox(targetAgentId);
+                    mbs.add(mb);
+                }
+                message = message.replaceAll("recipe", "");
+                message = message.replaceAll("nuclear", "");
+                message = message.replaceAll("ginger", "");
+                Message m = new Message(s.getAgentID(), targetAgentId, provider.getCurrTime(), message);
+                mb.addMessage(m);
+                for (SessionToken sToken : sts) {
+                    if (sToken.getAgentID().equals(targetAgentId) || sToken == s) {
+                        sToken.incrMsgLim();
+                    }
+                }
+                return true;
             }
         }return false;
     }
