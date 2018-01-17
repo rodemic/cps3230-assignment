@@ -1,4 +1,4 @@
-package main;
+package main.java.com.agentsystem;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -159,7 +159,7 @@ public class MessagingSystem {
                 if(provider.getCurrTime() - timeStamp >= 60000) return true;
             case 2: //For session timestamp
                 if(provider.getCurrTime() - timeStamp >= 600000) return true;
-            case 3: //For Mailbox timestamp
+            case 3: //For com.agentsystem.Mailbox timestamp
                 if(provider.getCurrTime() - timeStamp >= 1800000) return true;
             default: return false;
         }
