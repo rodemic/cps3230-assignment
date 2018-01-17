@@ -1,17 +1,8 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" build-on-make="true" name="Task2:war exploded">
-    <output-path>$PROJECT_DIR$/out/artifacts/Task2_war_exploded</output-path>
+    <output-path>$PROJECT_DIR$/Task1/output/artifacts/Task2_war_exploded</output-path>
     <root id="root">
-      <element id="directory" name="WEB-INF">
-        <element id="directory" name="classes">
-          <element id="module-output" name="Task2" />
-        </element>
-        <element id="directory" name="lib">
-          <element id="library" level="module" name="JUnit4" module-name="Task2" />
-          <element id="library" level="project" name="io.cucumber:cucumber-java8:Release" />
-          <element id="library" level="project" name="org.seleniumhq.selenium:selenium-java:Release" />
-        </element>
-      </element>
+      <element id="module-output" name="Task2" />
       <element id="javaee-facet-resources" facet="Task2/web/Web" />
     </root>
   </artifact>
