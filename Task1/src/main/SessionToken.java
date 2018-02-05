@@ -17,11 +17,11 @@ public class SessionToken {
         return timestamp;
     }
 
-    void incrMsgLim(){
+    public void incrMsgLim(){
         messageLimit++;
     }
 
-    String getAgentID() {
+    public String getAgentID() {
         return agentID;
     }
 
